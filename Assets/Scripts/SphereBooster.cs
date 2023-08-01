@@ -14,13 +14,14 @@ public class SphereBooster : MonoBehaviour
     // Sphereオブジェクトの初期位置格納用ベクトル
     Vector3 initPosition = Vector3.zero;
 
-    // Rigidbodyコンポーネントへの参照をキャッシュ
     Rigidbody rb;
 
     // 力を加える方向
+    [SerializeField]
     Vector3 forceDirection = new Vector3(1.0f, 1.0f, 0f);
 
     // 加える力の大きさ
+    [SerializeField]
     float forceMagnitude = 10.0f;
 
     void Start()
