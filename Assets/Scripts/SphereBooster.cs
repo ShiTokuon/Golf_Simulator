@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class SphereBooster : MonoBehaviour
 {
+    // 加える力の大きさ
+    [SerializeField]
+    float forceMagnitude = 10.0f;
+
+    // X軸からの角度
+    [SerializeField]
+    float forceAngle = 45.0f;
+
+    // 力を加える方向
+    Vector3 forceDirection = new Vector3(1.0f, 1.0f, 0f);
 
     // 飛行中フラグ
     bool isFlying = false;
@@ -14,15 +24,8 @@ public class SphereBooster : MonoBehaviour
     // Sphereオブジェクトの初期位置格納用ベクトル
     Vector3 initPosition = Vector3.zero;
 
+    // Rigidbodyコンポーネントへの参照をキャッシュ
     Rigidbody rb;
-
-    // 力を加える方向
-    [SerializeField]
-    Vector3 forceDirection = new Vector3(1.0f, 1.0f, 0f);
-
-    // 加える力の大きさ
-    [SerializeField]
-    float forceMagnitude = 10.0f;
 
     void Start()
     {
@@ -37,6 +40,9 @@ public class SphereBooster : MonoBehaviour
         {
             isBoostPressed = true;
         }
+
+        // forceAngleの変更を反映する
+        CalcForceDirection();
     }
 
     void FixedUpdate()
@@ -57,6 +63,7 @@ public class SphereBooster : MonoBehaviour
             // ボールを飛ばす処理
             BoostSphere();
         }
+
         // 飛行中フラグの切り替え
         isFlying = !isFlying;
 
@@ -86,5 +93,19 @@ public class SphereBooster : MonoBehaviour
     public void OnPressedBoostButton()
     {
         isBoostPressed = true;
+    }
+
+    void CalcForceDirection()
+    {
+        // 入力された角度をラジアンに変換
+        float rad = forceAngle * Mathf.Deg2Rad;
+
+        // それぞれの軸の成分を計算
+        float x = Mathf.Cos(rad);
+        float y = Mathf.Sin(rad);
+        float z = 0f;
+
+        // Vector3型に格納
+        forceDirection = new Vector3(x, y, z);
     }
 }
