@@ -8,8 +8,8 @@ public class SphereBooster : MonoBehaviour
     [SerializeField]
     float forceMagnitude = 10.0f;
 
-    // X²‚©‚ç‚ÌŠp“x
-    [SerializeField]
+    // X²‚©‚ç‚ÌŠp“x(90‚Ü‚Åİ’è)
+    [SerializeField,Range(0f,90f)]
     float forceAngle = 45.0f;
 
     // —Í‚ğ‰Á‚¦‚é•ûŒü
