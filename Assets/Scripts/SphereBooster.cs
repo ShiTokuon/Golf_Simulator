@@ -21,6 +21,12 @@ public class SphereBooster : MonoBehaviour
     // ボタン押下フラグ
     bool isBoostPressed = false;
 
+    // 距離測定中フラグ
+    bool isCheckingDistance = false;
+
+    // ボールのオブジェクト停止位置格納用ベクトル
+    Vector3 stopPosition = Vector3.zero;
+
     // Sphereオブジェクトの初期位置格納用ベクトル
     Vector3 initPosition = Vector3.zero;
 
@@ -47,6 +53,8 @@ public class SphereBooster : MonoBehaviour
 
     void FixedUpdate()
     {
+        CheckDistance();
+
         if (!isBoostPressed)
         {
             // キーまたはボタンが押されていなければ
@@ -79,6 +87,9 @@ public class SphereBooster : MonoBehaviour
 
         // 初期位置に移動させる
         gameObject.transform.position = initPosition;
+
+        // 距離測定中をFalseにセット
+        isCheckingDistance = false;
     }
 
     void BoostSphere()
@@ -88,6 +99,9 @@ public class SphereBooster : MonoBehaviour
 
         // 力を加えるメソッド
         rb.AddForce(force, ForceMode.Impulse);
+
+        // 距離測定中をTrueにセット
+        isCheckingDistance = true;
     }
 
     public void OnPressedBoostButton()
@@ -107,5 +121,37 @@ public class SphereBooster : MonoBehaviour
 
         // Vector3型に格納
         forceDirection = new Vector3(x, y, z);
+    }
+
+    void CheckDistance()
+    {
+        if (!isCheckingDistance)
+        {
+            // 距離測定中なら何もしない
+            return;
+        }
+        if (rb.IsSleeping())
+        {
+            // スリープモードに入ったら距離を出力
+            stopPosition = gameObject.transform.position;
+            float distance = GetDistanceInXZ(initPosition, stopPosition);
+
+            // コンソールに表示
+            Debug.Log("飛距離は " + distance.ToString("F2") + "メートルです。");
+
+            // 距離測定中をFalseにする
+            isCheckingDistance = false;
+        }
+    }
+
+    float GetDistanceInXZ(Vector3 startPos,Vector3 stopPos)
+    {
+        // 開始位置、停止位置それぞれ、Y軸を除いてVector3を制作
+        Vector3 startPosCalc = new Vector3(startPos.x, 0f, startPos.z);
+        Vector3 stopPosCalc = new Vector3(stopPos.x,0f, stopPos.z);
+
+        // 2つのVector3から距離を算出
+        float distance = Vector3.Distance(startPosCalc, stopPosCalc);
+        return distance;
     }
 }
