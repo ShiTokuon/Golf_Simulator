@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SphereBooster : MonoBehaviour
 {
+    // DistanceTextオブジェクトへの参照
+    [SerializeField]
+    GameObject distanceTextObject;
+
     // 加える力の大きさ
     [SerializeField]
     float forceMagnitude = 10.0f;
@@ -33,10 +38,23 @@ public class SphereBooster : MonoBehaviour
     // Rigidbodyコンポーネントへの参照をキャッシュ
     Rigidbody rb;
 
+    // DistanceTextオブジェクトのTextコンポーネントへの参照をキャッシュ
+    Text distanceText;
+
+    // UIテキストのプレフィックス
+    string distancePrefix = "飛距離: ";
+
+    // UIテキストのサフィックス
+    string distanceSuffix = " m";
+
     void Start()
     {
         initPosition = gameObject.transform.position;
         rb = gameObject.GetComponent<Rigidbody>();
+        distanceText = distanceTextObject.GetComponent<Text>();
+
+        // DistanceTextの初期値をセット
+        SetDistanceText(0f);
     }
 
     void Update()
@@ -136,10 +154,10 @@ public class SphereBooster : MonoBehaviour
             stopPosition = gameObject.transform.position;
             float distance = GetDistanceInXZ(initPosition, stopPosition);
 
-            // コンソールに表示
-            Debug.Log("飛距離は " + distance.ToString("F2") + "メートルです。");
+            // UIに表示
+            SetDistanceText(distance);
 
-            // 距離測定中をFalseにする
+            // 距離測定中をオフにする
             isCheckingDistance = false;
         }
     }
@@ -153,5 +171,11 @@ public class SphereBooster : MonoBehaviour
         // 2つのVector3から距離を算出
         float distance = Vector3.Distance(startPosCalc, stopPosCalc);
         return distance;
+    }
+
+    void SetDistanceText(float distance)
+    {
+        // 受け取った距離の値を使って画面に表示するテキストをセット
+        distanceText.text = distancePrefix + distance.ToString("F2") + distanceSuffix;
     }
 }
