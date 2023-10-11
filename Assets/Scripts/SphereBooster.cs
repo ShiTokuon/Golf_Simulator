@@ -9,6 +9,10 @@ public class SphereBooster : MonoBehaviour
     [SerializeField]
     GameObject distanceTextObject;
 
+    // HighScoreTextオブジェクトへの参照
+    [SerializeField]
+    GameObject highScoreTextObject;
+
     // 加える力の大きさ
     [SerializeField]
     float forceMagnitude = 10.0f;
@@ -47,14 +51,28 @@ public class SphereBooster : MonoBehaviour
     // UIテキストのサフィックス
     string distanceSuffix = " m";
 
+    // HighScoereTextオブジェクトのTextコンポーネントへの参照をキャッシュ
+    Text highScoreText;
+
+    // ハイスコア表示のプレフィックス
+    string highScorePrefix = "ハイスコア: ";
+
+    // ハイスコア表示のサフィックス
+    string highScoreSuffix = " m";
+
+    // ハイスコアの距離
+    float highScoreDistance = 0f;
+
     void Start()
     {
         initPosition = gameObject.transform.position;
         rb = gameObject.GetComponent<Rigidbody>();
         distanceText = distanceTextObject.GetComponent<Text>();
+        highScoreText = highScoreTextObject.GetComponent<Text>();
 
-        // DistanceTextの初期値をセット
+        // DistanceTextとHighScoreTextの初期値をセット
         SetDistanceText(0f);
+        SetHighScoreText(0f);
     }
 
     void Update()
@@ -108,6 +126,9 @@ public class SphereBooster : MonoBehaviour
 
         // 距離測定中をFalseにセット
         isCheckingDistance = false;
+
+        // 現在の距離をリセット
+        SetDistanceText(0f);
     }
 
     void BoostSphere()
@@ -148,14 +169,25 @@ public class SphereBooster : MonoBehaviour
             // 距離測定中なら何もしない
             return;
         }
+
+        // 現在距離までの距離を計算する
+        Vector3 currentPosition =gameObject.transform.position;
+        float distance = GetDistanceInXZ(initPosition, currentPosition);
+
+        // UIに表示
+        SetDistanceText(distance);
+
         if (rb.IsSleeping())
         {
-            // スリープモードに入ったら距離を出力
-            stopPosition = gameObject.transform.position;
-            float distance = GetDistanceInXZ(initPosition, stopPosition);
+            // ハイスコアのチェック
+            stopPosition = currentPosition;
+            float currentDistance = GetDistanceInXZ(initPosition, stopPosition);
 
-            // UIに表示
-            SetDistanceText(distance);
+            if (currentDistance > highScoreDistance)
+            {
+                highScoreDistance = currentDistance;
+            }
+            SetHighScoreText(highScoreDistance);
 
             // 距離測定中をオフにする
             isCheckingDistance = false;
@@ -177,5 +209,11 @@ public class SphereBooster : MonoBehaviour
     {
         // 受け取った距離の値を使って画面に表示するテキストをセット
         distanceText.text = distancePrefix + distance.ToString("F2") + distanceSuffix;
+    }
+
+    void SetHighScoreText(float distance)
+    {
+        // 受け取ったハイスコアの値を使って画面に表示するテキストをセット
+        highScoreText.text = highScorePrefix + distance.ToString("F2") + highScoreSuffix;
     }
 }
