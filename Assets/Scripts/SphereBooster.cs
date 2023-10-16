@@ -63,6 +63,9 @@ public class SphereBooster : MonoBehaviour
     // ハイスコアの距離
     float highScoreDistance = 0f;
 
+    // 落下判定用のタグ
+    string fallCheckerTag = "FallChecker";
+
     void Start()
     {
         initPosition = gameObject.transform.position;
@@ -215,5 +218,15 @@ public class SphereBooster : MonoBehaviour
     {
         // 受け取ったハイスコアの値を使って画面に表示するテキストをセット
         highScoreText.text = highScorePrefix + distance.ToString("F2") + highScoreSuffix;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        // 衝突した相手のタグを確認する
+        if(other.gameObject.tag == fallCheckerTag)
+        {
+            // ボールが落下判定用のオブジェクトだった時の処理
+            isBoostPressed = true;
+        }
     }
 }

@@ -623,7 +623,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.72, y: 2.59, z: -14.91}
+  m_LocalPosition: {x: 13.84, y: 2.5, z: -25.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -931,7 +931,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distanceTextObject: {fileID: 2001720732}
   highScoreTextObject: {fileID: 508183794}
-  forceMagnitude: 10
+  forceMagnitude: 20
   forceAngle: 45
 --- !u!1 &1215870910
 GameObject:
@@ -1013,7 +1013,7 @@ GameObject:
   - component: {fileID: 1993084877}
   m_Layer: 0
   m_Name: FallChecker
-  m_TagString: Untagged
+  m_TagString: FallChecker
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
