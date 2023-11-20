@@ -18,7 +18,7 @@ public class SphereBooster : MonoBehaviour
     float forceMagnitude = 10.0f;
 
     // X軸からの角度(90まで設定)
-    [SerializeField,Range(0f,90f)]
+    [SerializeField, Range(0f, 90f)]
     float forceAngle = 45.0f;
 
     // 力を加える方向
@@ -174,7 +174,7 @@ public class SphereBooster : MonoBehaviour
         }
 
         // 現在距離までの距離を計算する
-        Vector3 currentPosition =gameObject.transform.position;
+        Vector3 currentPosition = gameObject.transform.position;
         float distance = GetDistanceInXZ(initPosition, currentPosition);
 
         // UIに表示
@@ -197,11 +197,11 @@ public class SphereBooster : MonoBehaviour
         }
     }
 
-    float GetDistanceInXZ(Vector3 startPos,Vector3 stopPos)
+    float GetDistanceInXZ(Vector3 startPos, Vector3 stopPos)
     {
         // 開始位置、停止位置それぞれ、Y軸を除いてVector3を制作
         Vector3 startPosCalc = new Vector3(startPos.x, 0f, startPos.z);
-        Vector3 stopPosCalc = new Vector3(stopPos.x,0f, stopPos.z);
+        Vector3 stopPosCalc = new Vector3(stopPos.x, 0f, stopPos.z);
 
         // 2つのVector3から距離を算出
         float distance = Vector3.Distance(startPosCalc, stopPosCalc);
@@ -223,7 +223,7 @@ public class SphereBooster : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         // 衝突した相手のタグを確認する
-        if(other.gameObject.tag == fallCheckerTag)
+        if (other.gameObject.tag == fallCheckerTag)
         {
             // ボールが落下判定用のオブジェクトだった時の処理
             isBoostPressed = true;
