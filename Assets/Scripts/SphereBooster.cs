@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SphereBooster : MonoBehaviour
 {
-    public float maxHitForce = 25f;
+    public float maxHitForce = 20f;
     public float hitForceMultiplier = 5f;
 
     private Vector3 dragStartPos;
