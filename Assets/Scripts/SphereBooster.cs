@@ -28,6 +28,8 @@ public class SphereBooster : MonoBehaviour
     // 力を加える方向
     Vector3 forceDirection = new Vector3(1.0f, 1.0f, 0f);
 
+    Vector3 dragStart = Vector3.zero;
+
     // 飛行中フラグ
     bool isFlying = false;
 
@@ -43,6 +45,8 @@ public class SphereBooster : MonoBehaviour
     // 角度の上限と下限の定義
     const float MaxAngle = 180f;
     const float MinAngle = 0f;
+
+    const float MaxMagnitude = 2f;
 
     // Rigidbodyコンポーネントへの参照をキャッシュ
     Rigidbody rb;
@@ -100,6 +104,42 @@ public class SphereBooster : MonoBehaviour
     {
         // キーボードからの入力を監視
         CheckInput();
+
+        if (isFlying && Input.GetMouseButtonDown(0))
+        {
+            // マウスがクリックされたらドラッグの開始位置を記録
+            dragStart = Input.mousePosition;
+        }
+        else if (isFlying && Input.GetMouseButton(0))
+        {
+            // マウスがドラッグ中ならドラッグの終了位置を記録してボールを発射
+            Vector3 dragEnd = Input.mousePosition;
+
+            // ドラッグした距離に基づいて力を計算してボールに加える
+            Vector3 dragDistance = dragEnd - dragStart;
+            float hitForce = Mathf.Min(dragDistance.magnitude * forceMagnitude, MaxMagnitude);
+
+            // 向きと力の計算
+            Vector3 force = hitForce * forceDirection;
+
+            // 力を加えるメソッド
+            rb.AddForce(force, ForceMode.Impulse);
+
+            // 距離測定中をTrueにセット
+            isCheckingDistance = true;
+
+            // 飛行中フラグの切り替え
+            isFlying = true;
+
+            // ドラッグ開始点をリセット
+            dragStart = Vector3.zero;
+
+            // ボタンの押下状態をリセット
+            isBoostPressed = false;
+        }
+
+        // forceAngleの変更を反映する
+        CalcForceDirection();
 
         // forceAngleの変更を反映する
         CalcForceDirection();
