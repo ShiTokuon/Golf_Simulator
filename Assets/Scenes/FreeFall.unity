@@ -6393,6 +6393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distanceTextObject: {fileID: 2001720732}
   highScoreTextObject: {fileID: 508183794}
+  boostButtonObject: {fileID: 6922182}
   forceMagnitude: 10
   forceAngle: 45
 --- !u!1 &1215870910
