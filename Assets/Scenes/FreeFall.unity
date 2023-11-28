@@ -324,7 +324,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 408643488}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -358,24 +358,33 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0.1, z: 0}
-  - {x: 0, y: 0.1, z: 1}
+  - {x: 0, y: 0, z: 0}
+  - {x: 3, y: 0, z: 1}
   - {x: 0, y: 0.1, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.2
+    widthMultiplier: 1
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
+        value: 0.84210527
+        inSlope: 0.13726896
+        outSlope: 0.13726896
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 0.19170983
+      - serializedVersion: 3
+        time: 0.99481857
+        value: 0.065793484
+        inSlope: 0.000017582357
+        outSlope: 0.000017582357
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.22916666
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -409,7 +418,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 0
+    numCapVertices: 32
     alignment: 0
     textureMode: 0
     shadowBias: 0.5
@@ -6377,7 +6386,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 56
   m_CollisionDetection: 0
 --- !u!114 &1153413649
 MonoBehaviour:
@@ -6394,8 +6403,10 @@ MonoBehaviour:
   distanceTextObject: {fileID: 2001720732}
   highScoreTextObject: {fileID: 508183794}
   boostButtonObject: {fileID: 6922182}
+  line: {fileID: 408643489}
   forceMagnitude: 10
   forceAngle: 45
+  dragLimit: 5
 --- !u!1 &1215870910
 GameObject:
   m_ObjectHideFlags: 0

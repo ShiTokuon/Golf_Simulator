@@ -17,18 +17,29 @@ public class SphereBooster : MonoBehaviour
     [SerializeField]
     GameObject boostButtonObject;
 
+    // 発射方向
+    [SerializeField]
+    LineRenderer line;
+
     // 加える力の大きさ
     [SerializeField]
-    float forceMagnitude = 0f;
+    float forceMagnitude = 10f;
 
     // X軸からの角度(90まで設定)
     [SerializeField, Range(0f, 90f)]
     float forceAngle = 45.0f;
 
-    // 力を加える方向
-    Vector3 forceDirection = new Vector3(1.0f, 1.0f, 0f);
+    // Rigidbodyコンポーネントへの参照をキャッシュ
+    Rigidbody rb;
 
-    Vector3 dragStart = Vector3.zero;
+    // DistanceTextオブジェクトのTextコンポーネントへの参照をキャッシュ
+    Text distanceText;
+
+    // HighScoereTextオブジェクトのTextコンポーネントへの参照をキャッシュ
+    Text highScoreText;
+
+    // 発射ボタンオブジェクトへの参照
+    Button boostButton;
 
     // 飛行中フラグ
     bool isFlying = false;
@@ -39,6 +50,12 @@ public class SphereBooster : MonoBehaviour
     // 距離測定中フラグ
     bool isCheckingDistance = false;
 
+    // ボタンを押せる状態かどうかのフラグ
+    bool canButtonPress = true;
+
+    // ドラッグ開始フラグ
+    bool isDragging = false;
+
     // ボールのオブジェクト停止位置格納用ベクトル
     Vector3 stopPosition = Vector3.zero;
 
@@ -46,22 +63,35 @@ public class SphereBooster : MonoBehaviour
     const float MaxAngle = 180f;
     const float MinAngle = 0f;
 
-    const float MaxMagnitude = 2f;
+    // 力を加える方向
+    Vector3 forceDirection = new Vector3(1.0f, 1.0f, 0f);
 
-    // Rigidbodyコンポーネントへの参照をキャッシュ
-    Rigidbody rb;
+    // ドラッグ最大付与力量
+    public float dragLimit = 1f;
 
-    // DistanceTextオブジェクトのTextコンポーネントへの参照をキャッシュ
-    Text distanceText;
+    // 加える力の大きさ
+    //public float forceToAdd = 10f;
+
+    // ボールを発射する直前の位置
+    Vector3 prePosition = Vector3.zero;
+
+    // 発射方向の力
+    Vector3 currentForce = Vector3.zero;
+
+    // メインカメラ
+    private Camera mainCamera = null;
+
+    // メインカメラ座標
+    private Transform mainCameraPos = null;
+
+    // ドラック開始点
+    private Vector3 dragStart = Vector3.zero;
 
     // UIテキストのプレフィックス
     string distancePrefix = "飛距離: ";
 
     // UIテキストのサフィックス
     string distanceSuffix = " m";
-
-    // HighScoereTextオブジェクトのTextコンポーネントへの参照をキャッシュ
-    Text highScoreText;
 
     // ハイスコア表示のプレフィックス
     string highScorePrefix = "ハイスコア: ";
@@ -75,22 +105,14 @@ public class SphereBooster : MonoBehaviour
     // 落下判定用のタグ
     string fallCheckerTag = "FallChecker";
 
-    // ボールを発射する直前の位置
-    Vector3 prePosition = Vector3.zero;
-
-    // 発射ボタンオブジェクトへの参照
-    Button boostButton;
-
-    // ボタンを押せる状態かどうかのフラグ
-    bool canButtonPress = true;
-
 
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         distanceText = distanceTextObject.GetComponent<Text>();
         highScoreText = highScoreTextObject.GetComponent<Text>();
-
+        mainCamera = Camera.main;
+        mainCameraPos = mainCamera.transform;
 
         // boostボタンのコンポーネントへの参照を追加
         boostButton = boostButtonObject.GetComponent<Button>();
@@ -104,42 +126,6 @@ public class SphereBooster : MonoBehaviour
     {
         // キーボードからの入力を監視
         CheckInput();
-
-        if (isFlying && Input.GetMouseButtonDown(0))
-        {
-            // マウスがクリックされたらドラッグの開始位置を記録
-            dragStart = Input.mousePosition;
-        }
-        else if (isFlying && Input.GetMouseButton(0))
-        {
-            // マウスがドラッグ中ならドラッグの終了位置を記録してボールを発射
-            Vector3 dragEnd = Input.mousePosition;
-
-            // ドラッグした距離に基づいて力を計算してボールに加える
-            Vector3 dragDistance = dragEnd - dragStart;
-            float hitForce = Mathf.Min(dragDistance.magnitude * forceMagnitude, MaxMagnitude);
-
-            // 向きと力の計算
-            Vector3 force = hitForce * forceDirection;
-
-            // 力を加えるメソッド
-            rb.AddForce(force, ForceMode.Impulse);
-
-            // 距離測定中をTrueにセット
-            isCheckingDistance = true;
-
-            // 飛行中フラグの切り替え
-            isFlying = true;
-
-            // ドラッグ開始点をリセット
-            dragStart = Vector3.zero;
-
-            // ボタンの押下状態をリセット
-            isBoostPressed = false;
-        }
-
-        // forceAngleの変更を反映する
-        CalcForceDirection();
 
         // forceAngleの変更を反映する
         CalcForceDirection();
@@ -192,11 +178,13 @@ public class SphereBooster : MonoBehaviour
         // ボールが発射される時の位置を記録
         prePosition = transform.position;
 
-        // 向きと力の計算
-        Vector3 force = forceMagnitude * forceDirection;
+        //// 向きと力の計算
+        //Vector3 force = forceMagnitude * forceDirection;
 
-        // 力を加えるメソッド
-        rb.AddForce(force, ForceMode.Impulse);
+        //// 力を加えるメソッド
+        //rb.AddForce(force, ForceMode.Impulse);
+
+        OnMouseUp();
 
         // 距離測定中をTrueにセット
         isCheckingDistance = true;
@@ -271,6 +259,7 @@ public class SphereBooster : MonoBehaviour
         float distance = Vector3.Distance(startPosCalc, stopPosCalc);
         return distance;
     }
+
     void SetDistanceText(float distance)
     {
         // 受け取った距離の値を使って画面に表示するテキストをセット
@@ -381,5 +370,55 @@ public class SphereBooster : MonoBehaviour
         boostButton.interactable = canButtonPress;
     }
 
+    Vector3 GetMousePosition()
+    {
+        // マウス座標を取得
+        Vector3 position = Input.mousePosition;
+        position.z = mainCameraPos.position.z;
+        position = mainCamera.ScreenToWorldPoint(position);
+
+        return position;
+    }
+
+    private void OnMouseDown()
+    {
+        dragStart = GetMousePosition();
+
+        line.enabled = true;
+        isDragging = true;
+        line.SetPosition(0, rb.position);
+        line.SetPosition(1, rb.position);
+
+    }
+
+    private void OnMouseDrag()
+    {
+            Vector3 position = GetMousePosition();
+
+            currentForce = position - dragStart;
+            if (currentForce.magnitude > dragLimit * dragLimit)
+            {
+                currentForce *= dragLimit / currentForce.magnitude;
+            }
+
+            line.SetPosition(0, rb.position);
+            line.SetPosition(1, rb.position + currentForce);
+    }
+
+    public void OnMouseUp()
+    {
+        if (isDragging)
+        {
+            line.enabled = false;
+            isDragging = false;
+            Flip(currentForce * 2);
+        }
+
+    }
+
+    public void Flip(Vector3 force)
+    {
+        rb.AddForce(force, ForceMode.Impulse);
+    }
 
 }
