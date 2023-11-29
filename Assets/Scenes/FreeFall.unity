@@ -369,21 +369,21 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.84210527
-        inSlope: 0.13726896
-        outSlope: 0.13726896
+        value: 0.765674
+        inSlope: -0.6352695
+        outSlope: -0.6352695
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.19170983
+        outWeight: 0.13646656
       - serializedVersion: 3
-        time: 0.99481857
-        value: 0.065793484
-        inSlope: 0.000017582357
-        outSlope: 0.000017582357
+        time: 1
+        value: 0
+        inSlope: -0.6634642
+        outSlope: -0.6634642
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.22916666
+        inWeight: 0.15701385
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -6406,7 +6406,7 @@ MonoBehaviour:
   line: {fileID: 408643489}
   forceMagnitude: 10
   forceAngle: 45
-  dragLimit: 5
+  MaxMagnitude: 2
 --- !u!1 &1215870910
 GameObject:
   m_ObjectHideFlags: 0

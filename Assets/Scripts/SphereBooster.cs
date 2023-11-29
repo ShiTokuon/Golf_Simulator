@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,7 +68,12 @@ public class SphereBooster : MonoBehaviour
     Vector3 forceDirection = new Vector3(1.0f, 1.0f, 0f);
 
     // ドラッグ最大付与力量
-    public float dragLimit = 1f;
+    [SerializeField]
+    float MaxMagnitude = 2f;
+
+    // 与力量上限値
+    [SerializeField]
+    const float FixForce = 10f;
 
     // 加える力の大きさ
     //public float forceToAdd = 10f;
@@ -127,6 +133,24 @@ public class SphereBooster : MonoBehaviour
         // キーボードからの入力を監視
         CheckInput();
 
+        // マウスがクリックした時
+        if (Input.GetMouseButtonDown(0))
+        {
+            DragStart();
+        }
+
+        // マウスをドラッグ中
+        if (Input.GetMouseButton(0))
+        {
+            Drag();
+        }
+
+        // マウスクリックが解除した時
+        if (Input.GetMouseButtonUp(0))
+        {
+            DragEnd();
+        }
+
         // forceAngleの変更を反映する
         CalcForceDirection();
     }
@@ -179,12 +203,10 @@ public class SphereBooster : MonoBehaviour
         prePosition = transform.position;
 
         //// 向きと力の計算
-        //Vector3 force = forceMagnitude * forceDirection;
+        Vector3 force = forceMagnitude * forceDirection;
 
         //// 力を加えるメソッド
-        //rb.AddForce(force, ForceMode.Impulse);
-
-        OnMouseUp();
+        rb.AddForce(force, ForceMode.Impulse);
 
         // 距離測定中をTrueにセット
         isCheckingDistance = true;
@@ -373,9 +395,10 @@ public class SphereBooster : MonoBehaviour
     Vector3 GetMousePosition()
     {
         // マウス座標を取得
-        Vector3 position = Input.mousePosition;
+        var position = Input.mousePosition;
         position.z = mainCameraPos.position.z;
         position = mainCamera.ScreenToWorldPoint(position);
+        position.z = 0;
 
         return position;
     }
@@ -393,12 +416,12 @@ public class SphereBooster : MonoBehaviour
 
     private void OnMouseDrag()
     {
-            Vector3 position = GetMousePosition();
+            var position = GetMousePosition();
 
             currentForce = position - dragStart;
-            if (currentForce.magnitude > dragLimit * dragLimit)
+            if (currentForce.magnitude > MaxMagnitude * MaxMagnitude)
             {
-                currentForce *= dragLimit / currentForce.magnitude;
+                currentForce *= MaxMagnitude / currentForce.magnitude;
             }
 
             line.SetPosition(0, rb.position);
@@ -413,12 +436,28 @@ public class SphereBooster : MonoBehaviour
             isDragging = false;
             Flip(currentForce * 2);
         }
-
     }
+
+
 
     public void Flip(Vector3 force)
     {
         rb.AddForce(force, ForceMode.Impulse);
+    }
+
+    void DragStart()
+    {
+
+    }
+
+    void Drag()
+    {
+
+    }
+
+    void DragEnd()
+    {
+
     }
 
 }
