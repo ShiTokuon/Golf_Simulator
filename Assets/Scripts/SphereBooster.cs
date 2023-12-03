@@ -23,8 +23,9 @@ public class SphereBooster : MonoBehaviour
     LineRenderer line;
 
     // 加える力の大きさ
+    // ドラッグ最大付与力量
     [SerializeField]
-    float forceMagnitude = 10f;
+    float MaxMagnitude = 2f;
 
     // X軸からの角度(90まで設定)
     [SerializeField, Range(0f, 90f)]
@@ -46,16 +47,19 @@ public class SphereBooster : MonoBehaviour
     bool isFlying = false;
 
     // ボタン押下フラグ
-    bool isBoostPressed = false;
+    //bool isBoostPressed = false;
 
     // 距離測定中フラグ
     bool isCheckingDistance = false;
 
     // ボタンを押せる状態かどうかのフラグ
-    bool canButtonPress = true;
+    //bool canButtonPress = true;
 
     // ドラッグ開始フラグ
     bool isDragging = false;
+
+    // ドラッグ開始できる状態かどうかのフラグ
+    bool isDraggChecking = true;
 
     // ボールのオブジェクト停止位置格納用ベクトル
     Vector3 stopPosition = Vector3.zero;
@@ -66,14 +70,6 @@ public class SphereBooster : MonoBehaviour
 
     // 力を加える方向
     Vector3 forceDirection = new Vector3(1.0f, 1.0f, 0f);
-
-    // ドラッグ最大付与力量
-    [SerializeField]
-    float MaxMagnitude = 2f;
-
-    // 与力量上限値
-    [SerializeField]
-    const float FixForce = 10f;
 
     // 加える力の大きさ
     //public float forceToAdd = 10f;
@@ -133,26 +129,15 @@ public class SphereBooster : MonoBehaviour
         // キーボードからの入力を監視
         CheckInput();
 
-        // マウスがクリックした時
-        if (Input.GetMouseButtonDown(0))
-        {
-            DragStart();
-        }
-
-        // マウスをドラッグ中
-        if (Input.GetMouseButton(0))
-        {
-            Drag();
-        }
-
-        // マウスクリックが解除した時
-        if (Input.GetMouseButtonUp(0))
-        {
-            DragEnd();
-        }
+        // マウス操作処理
+        MouseDragges();
 
         // forceAngleの変更を反映する
         CalcForceDirection();
+
+        Debug.Log("idDraggingフラグは" + isDragging);
+        //Debug.Log("isBoostPressedフラグは"+isBoostPressed);
+        Debug.Log("isDraggingCheckingフラグは" + isDraggChecking);
     }
 
     void FixedUpdate()
@@ -163,16 +148,19 @@ public class SphereBooster : MonoBehaviour
         // ゴール判定
         CheckSphereState();
 
-        if (!isBoostPressed)
+        //if (!isBoostPressed)
+        //{
+        //    // キーまたはボタンが押されていなければ
+        //    // 処理の切り替えをせず抜ける
+        //    return;
+        //}
+
+        if (!isDragging)
         {
             // キーまたはボタンが押されていなければ
             // 処理の切り替えをせず抜ける
             return;
         }
-
-        // Boostボタンが押された場合に以下の処理を行う
-        canButtonPress = false;
-        boostButton.interactable = canButtonPress;
 
         // ボールの発射処理
         BoostSphere();
@@ -181,7 +169,9 @@ public class SphereBooster : MonoBehaviour
         isFlying = true;
 
         // どちらの処理をしてもボタン押下フラグをfalseに
-        isBoostPressed = false;
+        // マウス用
+        isDragging = false;
+
     }
 
     void StopFlying()
@@ -202,12 +192,6 @@ public class SphereBooster : MonoBehaviour
         // ボールが発射される時の位置を記録
         prePosition = transform.position;
 
-        //// 向きと力の計算
-        Vector3 force = forceMagnitude * forceDirection;
-
-        //// 力を加えるメソッド
-        rb.AddForce(force, ForceMode.Impulse);
-
         // 距離測定中をTrueにセット
         isCheckingDistance = true;
 
@@ -219,11 +203,6 @@ public class SphereBooster : MonoBehaviour
 
         // ガイドを非表示にする
         //guideManager.SetGuidesState(false);
-    }
-
-    public void OnPressedBoostButton()
-    {
-        isBoostPressed = true;
     }
 
     void CalcForceDirection()
@@ -308,9 +287,14 @@ public class SphereBooster : MonoBehaviour
         // キーが押された時の動きを定義
 
         // Input.GetKeyUpはキーが一度押された後、それが離された時にTrueを返す
-        if (Input.GetKeyUp(KeyCode.B) && canButtonPress)
+        //if (Input.GetKeyUp(KeyCode.B) && canButtonPress)
+        //{
+        //    //isBoostPressed = true;
+        //}
+
+        if (Input.GetKeyUp(KeyCode.B) && isDragging)
         {
-            isBoostPressed = true;
+            isDragging = true;
         }
 
         // 上キーが押された時は、角度変更ボタン(上)が押された時の処理を呼ぶ
@@ -388,8 +372,11 @@ public class SphereBooster : MonoBehaviour
         //guideManager.SetGuidesState(true);
 
         // ボールの運動状態を確認
-        canButtonPress = true;
-        boostButton.interactable = canButtonPress;
+        //canButtonPress = true;
+        //boostButton.interactable = canButtonPress;
+
+        isDragging = true;
+        isDraggChecking = true;
     }
 
     Vector3 GetMousePosition()
@@ -403,61 +390,60 @@ public class SphereBooster : MonoBehaviour
         return position;
     }
 
-    private void OnMouseDown()
+
+    void DragStart()
     {
         dragStart = GetMousePosition();
 
         line.enabled = true;
-        isDragging = true;
         line.SetPosition(0, rb.position);
         line.SetPosition(1, rb.position);
-
     }
 
-    private void OnMouseDrag()
+    void Drag()
     {
-            var position = GetMousePosition();
+        var position = GetMousePosition();
 
-            currentForce = position - dragStart;
-            if (currentForce.magnitude > MaxMagnitude * MaxMagnitude)
-            {
-                currentForce *= MaxMagnitude / currentForce.magnitude;
-            }
-
-            line.SetPosition(0, rb.position);
-            line.SetPosition(1, rb.position + currentForce);
-    }
-
-    public void OnMouseUp()
-    {
-        if (isDragging)
+        currentForce = position - dragStart;
+        if (currentForce.magnitude > MaxMagnitude * MaxMagnitude)
         {
-            line.enabled = false;
-            isDragging = false;
-            Flip(currentForce * 2);
+            currentForce *= MaxMagnitude / currentForce.magnitude;
+        }
+
+        line.SetPosition(0, rb.position);
+        line.SetPosition(1, rb.position + currentForce);
+    }
+
+    void DragEnd()
+    {
+        line.enabled = false;
+        isDraggChecking = false;
+        Flip(currentForce * 4);
+    }
+
+    void MouseDragges()
+    {
+        // マウスがクリックした時
+        if (Input.GetMouseButtonDown(0) && isDraggChecking)
+        {
+            DragStart();
+        }
+
+        // マウスをドラッグ中
+        if (Input.GetMouseButton(0) && isDraggChecking)
+        {
+            Drag();
+        }
+
+        // マウスクリックが解除した時
+        if (Input.GetMouseButtonUp(0) && isDraggChecking)
+        {
+            DragEnd();
         }
     }
-
-
 
     public void Flip(Vector3 force)
     {
         rb.AddForce(force, ForceMode.Impulse);
     }
-
-    void DragStart()
-    {
-
-    }
-
-    void Drag()
-    {
-
-    }
-
-    void DragEnd()
-    {
-
-    }
-
 }

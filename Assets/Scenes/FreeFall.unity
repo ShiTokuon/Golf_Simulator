@@ -6404,9 +6404,8 @@ MonoBehaviour:
   highScoreTextObject: {fileID: 508183794}
   boostButtonObject: {fileID: 6922182}
   line: {fileID: 408643489}
-  forceMagnitude: 10
-  forceAngle: 45
-  MaxMagnitude: 2
+  MaxMagnitude: 2.2
+  forceAngle: 28.9
 --- !u!1 &1215870910
 GameObject:
   m_ObjectHideFlags: 0
