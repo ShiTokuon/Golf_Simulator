@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Rigidbody))]
 public class SphereBooster : MonoBehaviour
 {
     // DistanceTextオブジェクトへの参照
@@ -20,12 +21,15 @@ public class SphereBooster : MonoBehaviour
 
     // 発射方向
     [SerializeField]
-    LineRenderer line;
+    LineRenderer line = null;
+
+    // 発射軌跡
+    [SerializeField]
+    LineRenderer GuideLine = null;
 
     // 加える力の大きさ
     // ドラッグ最大付与力量
-    [SerializeField]
-    float MaxMagnitude = 2f;
+    private const float MaxMagnitude = 2f;
 
     // X軸からの角度(90まで設定)
     [SerializeField, Range(0f, 90f)]
@@ -80,6 +84,9 @@ public class SphereBooster : MonoBehaviour
     // 発射方向の力
     Vector3 currentForce = Vector3.zero;
 
+    // ボール位置
+    Vector3 currentPosition = Vector3.zero;
+
     // メインカメラ
     private Camera mainCamera = null;
 
@@ -88,6 +95,12 @@ public class SphereBooster : MonoBehaviour
 
     // ドラック開始点
     private Vector3 dragStart = Vector3.zero;
+
+    // 固定フレームウェイト
+    private static float DeltaTime;
+
+    // 固定フレーム待ち時間
+    private static readonly WaitForFixedUpdate waitForFixedUpdate = new WaitForFixedUpdate();
 
     // UIテキストのプレフィックス
     string distancePrefix = "飛距離: ";
@@ -115,6 +128,8 @@ public class SphereBooster : MonoBehaviour
         highScoreText = highScoreTextObject.GetComponent<Text>();
         mainCamera = Camera.main;
         mainCameraPos = mainCamera.transform;
+        currentPosition = rb.position;
+        DeltaTime = Time.fixedDeltaTime;
 
         // boostボタンのコンポーネントへの参照を追加
         boostButton = boostButtonObject.GetComponent<Button>();
@@ -390,14 +405,16 @@ public class SphereBooster : MonoBehaviour
         return position;
     }
 
-
     void DragStart()
     {
         dragStart = GetMousePosition();
+        currentPosition = rb.position;
 
         line.enabled = true;
-        line.SetPosition(0, rb.position);
-        line.SetPosition(1, rb.position);
+        GuideLine.enabled = true;
+        line.SetPosition(0, currentPosition);
+        line.SetPosition(1, currentPosition);
+
     }
 
     void Drag()
@@ -410,15 +427,47 @@ public class SphereBooster : MonoBehaviour
             currentForce *= MaxMagnitude / currentForce.magnitude;
         }
 
-        line.SetPosition(0, rb.position);
-        line.SetPosition(1, rb.position + currentForce);
+        line.SetPosition(0, currentPosition);
+        line.SetPosition(1, currentPosition + currentForce);
+
+        this.StartCoroutine(this.Guide());
+    }
+    IEnumerator Guide()
+    {
+        line.enabled = false;
+        
+        Physics.autoSimulation = false;
+
+        var points = new List<Vector3> { currentPosition };
+        Flip(currentForce * 6);
+
+        // 軌跡をシミレーションして記録する
+        for (var i = 0; i < 20; i++)
+        {
+            Physics.Simulate(DeltaTime * 2.5f);
+            points.Add(rb.position);
+        }
+
+        // 元の位置に戻す
+        rb.velocity = Vector3.zero;
+        this.transform.position = currentPosition;
+
+        // 予測地点を繋いで軌跡を描画
+        GuideLine.positionCount = points.Count;
+        GuideLine.SetPositions(points.ToArray());
+
+        Physics.autoSimulation = true;
+        line.enabled = true;
+
+        yield return waitForFixedUpdate;
     }
 
     void DragEnd()
     {
         line.enabled = false;
+        GuideLine.enabled = false;
         isDraggChecking = false;
-        Flip(currentForce * 4);
+        Flip(currentForce * 6f);
     }
 
     void MouseDragges()
@@ -446,4 +495,5 @@ public class SphereBooster : MonoBehaviour
     {
         rb.AddForce(force, ForceMode.Impulse);
     }
+
 }
