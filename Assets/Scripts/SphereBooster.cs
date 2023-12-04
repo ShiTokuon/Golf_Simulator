@@ -150,9 +150,10 @@ public class SphereBooster : MonoBehaviour
         // forceAngleの変更を反映する
         CalcForceDirection();
 
-        Debug.Log("idDraggingフラグは" + isDragging);
+        //Debug.Log("idDraggingフラグは" + isDragging);
         //Debug.Log("isBoostPressedフラグは"+isBoostPressed);
-        Debug.Log("isDraggingCheckingフラグは" + isDraggChecking);
+        //Debug.Log("isDraggingCheckingフラグは" + isDraggChecking);
+        //Debug.Log("currentForce" + currentForce);
     }
 
     void FixedUpdate()
@@ -435,7 +436,7 @@ public class SphereBooster : MonoBehaviour
     IEnumerator Guide()
     {
         line.enabled = false;
-        
+
         Physics.autoSimulation = false;
 
         var points = new List<Vector3> { currentPosition };

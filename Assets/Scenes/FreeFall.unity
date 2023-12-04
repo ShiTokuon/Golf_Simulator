@@ -370,20 +370,20 @@ LineRenderer:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: 0.10058781
-        outSlope: 0.10058781
+        inSlope: -0.0000052668847
+        outSlope: -0.0000052668847
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.3590021
+        outWeight: 0.05681669
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 0.07142502
-        outSlope: 0.07142502
+        inSlope: 0.042552438
+        outSlope: 0.042552438
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.27223438
+        inWeight: 0.050644733
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -773,7 +773,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 661006264}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -5604,7 +5604,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 890c315fc9a2d0149926bf0464388b3e, type: 2}
+  - {fileID: 2100000, guid: 065a3a5e6d6af2b44a572eb7471d65c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5625,7 +5625,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 0.5
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -5644,11 +5644,11 @@ TrailRenderer:
       - serializedVersion: 3
         time: 1
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: -2.499099
+        outSlope: -2.499099
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0
+        inWeight: 0.16894978
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -5656,7 +5656,7 @@ TrailRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -6229,7 +6229,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 433376cd8295a8a4d8e7d417fc9a453c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6326,7 +6326,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2ea2e92541ce40847a9d716ed6910985, type: 2}
+  - {fileID: 2100000, guid: 890c315fc9a2d0149926bf0464388b3e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6406,7 +6406,7 @@ MonoBehaviour:
   boostButtonObject: {fileID: 6922182}
   line: {fileID: 408643489}
   GuideLine: {fileID: 1787728408}
-  forceAngle: 28.9
+  forceAngle: 45
 --- !u!1 &1215870910
 GameObject:
   m_ObjectHideFlags: 0
