@@ -27,6 +27,9 @@ public class SphereBooster : MonoBehaviour
     [SerializeField]
     LineRenderer GuideLine = null;
 
+    // スクリプトの参照
+    public static SphereBooster instance;
+
     // 加える力の大きさ
     // ドラッグ最大付与力量
     private const float MaxMagnitude = 2f;
@@ -48,13 +51,13 @@ public class SphereBooster : MonoBehaviour
     Button boostButton;
 
     // 飛行中フラグ
-    bool isFlying = false;
+    public bool isFlying = false;
 
     // ボタン押下フラグ
     //bool isBoostPressed = false;
 
     // 距離測定中フラグ
-    bool isCheckingDistance = false;
+    public bool isCheckingDistance = false;
 
     // ボタンを押せる状態かどうかのフラグ
     //bool canButtonPress = true;
@@ -63,7 +66,7 @@ public class SphereBooster : MonoBehaviour
     bool isDragging = false;
 
     // ドラッグ開始できる状態かどうかのフラグ
-    bool isDraggChecking = true;
+    public bool isDraggChecking = true;
 
     // ボールのオブジェクト停止位置格納用ベクトル
     Vector3 stopPosition = Vector3.zero;
@@ -120,6 +123,13 @@ public class SphereBooster : MonoBehaviour
     // 落下判定用のタグ
     string fallCheckerTag = "FallChecker";
 
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     void Start()
     {
@@ -145,7 +155,7 @@ public class SphereBooster : MonoBehaviour
         CheckInput();
 
         // マウス操作処理
-        MouseDragges();
+        MouseDraggs();
 
         // forceAngleの変更を反映する
         CalcForceDirection();
@@ -471,7 +481,7 @@ public class SphereBooster : MonoBehaviour
         Flip(currentForce * 6f);
     }
 
-    void MouseDragges()
+    void MouseDraggs()
     {
         // マウスがクリックした時
         if (Input.GetMouseButtonDown(0) && isDraggChecking)
