@@ -23,16 +23,12 @@ public class SphereBooster : MonoBehaviour
     [SerializeField]
     LineRenderer line = null;
 
-    // 発射軌跡
-    [SerializeField]
-    LineRenderer GuideLine = null;
-
     // スクリプトの参照
     public static SphereBooster instance;
 
     // 加える力の大きさ
     // ドラッグ最大付与力量
-    private const float MaxMagnitude = 2f;
+    private const float MaxMagnitude = 5f;
 
     // X軸からの角度(90まで設定)
     [SerializeField, Range(0f, 90f)]
@@ -51,7 +47,7 @@ public class SphereBooster : MonoBehaviour
     Button boostButton;
 
     // 飛行中フラグ
-    public bool isFlying = false;
+    public bool isFlying = true;
 
     // ボタン押下フラグ
     //bool isBoostPressed = false;
@@ -63,6 +59,9 @@ public class SphereBooster : MonoBehaviour
     //bool canButtonPress = true;
 
     // ドラッグ開始フラグ
+    public bool isDragStart = false;
+
+    // ドラッグフラグ
     bool isDragging = false;
 
     // ドラッグ開始できる状態かどうかのフラグ
@@ -422,7 +421,6 @@ public class SphereBooster : MonoBehaviour
         currentPosition = rb.position;
 
         line.enabled = true;
-        GuideLine.enabled = true;
         line.SetPosition(0, currentPosition);
         line.SetPosition(1, currentPosition);
 
@@ -430,68 +428,39 @@ public class SphereBooster : MonoBehaviour
 
     void Drag()
     {
+        currentPosition = rb.position;
+        line.enabled = true;
+
         var position = GetMousePosition();
 
         currentForce = position - dragStart;
-        if (currentForce.magnitude > MaxMagnitude * MaxMagnitude)
+        if (currentForce.magnitude > MaxMagnitude)
         {
             currentForce *= MaxMagnitude / currentForce.magnitude;
         }
 
         line.SetPosition(0, currentPosition);
         line.SetPosition(1, currentPosition + currentForce);
-
-        this.StartCoroutine(this.Guide());
-    }
-    IEnumerator Guide()
-    {
-        line.enabled = false;
-
-        Physics.autoSimulation = false;
-
-        var points = new List<Vector3> { currentPosition };
-        Flip(currentForce * 6);
-
-        // 軌跡をシミレーションして記録する
-        for (var i = 0; i < 20; i++)
-        {
-            Physics.Simulate(DeltaTime * 2.5f);
-            points.Add(rb.position);
-        }
-
-        // 元の位置に戻す
-        rb.velocity = Vector3.zero;
-        this.transform.position = currentPosition;
-
-        // 予測地点を繋いで軌跡を描画
-        GuideLine.positionCount = points.Count;
-        GuideLine.SetPositions(points.ToArray());
-
-        Physics.autoSimulation = true;
-        line.enabled = true;
-
-        yield return waitForFixedUpdate;
     }
 
     void DragEnd()
     {
         line.enabled = false;
-        GuideLine.enabled = false;
         isDraggChecking = false;
-        Flip(currentForce * 6f);
+        isDragStart = false;
+        Flip(currentForce * 3f);
     }
 
     void MouseDraggs()
     {
-        // マウスがクリックした時
-        if (Input.GetMouseButtonDown(0) && isDraggChecking)
-        {
-            DragStart();
-        }
-
         // マウスをドラッグ中
         if (Input.GetMouseButton(0) && isDraggChecking)
         {
+            if (isDragStart == false)
+            {
+                isDragStart = true;
+                DragStart();
+            }
             Drag();
         }
 
@@ -506,5 +475,4 @@ public class SphereBooster : MonoBehaviour
     {
         rb.AddForce(force, ForceMode.Impulse);
     }
-
 }
