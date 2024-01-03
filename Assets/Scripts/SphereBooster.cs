@@ -19,9 +19,16 @@ public class SphereBooster : MonoBehaviour
     [SerializeField]
     GameObject boostButtonObject;
 
+    // ゴール用UIテキストオブジェクトへの参照
+    [SerializeField]
+    GameObject goalTextObject;
+
     // 発射方向
     [SerializeField]
     LineRenderer line = null;
+
+    [Range(0.1f, 2.0f)]
+    public float speed = 2.0f;
 
     // スクリプトの参照
     public static SphereBooster instance;
@@ -49,9 +56,6 @@ public class SphereBooster : MonoBehaviour
     // 飛行中フラグ
     public bool isFlying = true;
 
-    // ボタン押下フラグ
-    //bool isBoostPressed = false;
-
     // 距離測定中フラグ
     public bool isCheckingDistance = false;
 
@@ -67,6 +71,12 @@ public class SphereBooster : MonoBehaviour
     // ドラッグ開始できる状態かどうかのフラグ
     public bool isDraggChecking = true;
 
+    // ゴール接触フラグ
+    bool isTouchingGoal = false;
+
+    // ゴール済みフラグ
+    bool hasReachedGoal = false;
+
     // ボールのオブジェクト停止位置格納用ベクトル
     Vector3 stopPosition = Vector3.zero;
 
@@ -76,9 +86,6 @@ public class SphereBooster : MonoBehaviour
 
     // 力を加える方向
     Vector3 forceDirection = new Vector3(1.0f, 1.0f, 0f);
-
-    // 加える力の大きさ
-    //public float forceToAdd = 10f;
 
     // ボールを発射する直前の位置
     Vector3 prePosition = Vector3.zero;
@@ -104,6 +111,9 @@ public class SphereBooster : MonoBehaviour
     // 固定フレーム待ち時間
     private static readonly WaitForFixedUpdate waitForFixedUpdate = new WaitForFixedUpdate();
 
+    // ゴールのタグ
+    string goalTag = "Finish";
+
     // UIテキストのプレフィックス
     string distancePrefix = "飛距離: ";
 
@@ -128,6 +138,7 @@ public class SphereBooster : MonoBehaviour
         {
             instance = this;
         }
+        Physics.autoSimulation = false;
     }
 
     void Start()
@@ -150,35 +161,22 @@ public class SphereBooster : MonoBehaviour
 
     void Update()
     {
-        // キーボードからの入力を監視
-        CheckInput();
-
         // マウス操作処理
         MouseDraggs();
 
         // forceAngleの変更を反映する
         CalcForceDirection();
-
-        //Debug.Log("idDraggingフラグは" + isDragging);
-        //Debug.Log("isBoostPressedフラグは"+isBoostPressed);
-        //Debug.Log("isDraggingCheckingフラグは" + isDraggChecking);
-        //Debug.Log("currentForce" + currentForce);
     }
 
     void FixedUpdate()
     {
+        Physics.Simulate(Time.fixedDeltaTime * speed);
+
         // 距離の測定
         CheckDistance();
 
         // ゴール判定
         CheckSphereState();
-
-        //if (!isBoostPressed)
-        //{
-        //    // キーまたはボタンが押されていなければ
-        //    // 処理の切り替えをせず抜ける
-        //    return;
-        //}
 
         if (!isDragging)
         {
@@ -187,8 +185,8 @@ public class SphereBooster : MonoBehaviour
             return;
         }
 
-        // ボールの発射処理
-        BoostSphere();
+        // ボールの位置を記録
+        SphereStorage();
 
         // 飛行中フラグの切り替え
         isFlying = true;
@@ -196,7 +194,6 @@ public class SphereBooster : MonoBehaviour
         // どちらの処理をしてもボタン押下フラグをfalseに
         // マウス用
         isDragging = false;
-
     }
 
     void StopFlying()
@@ -212,22 +209,22 @@ public class SphereBooster : MonoBehaviour
         ReadyToBoost();
     }
 
-    void BoostSphere()
+    void Stop_rb()
+    {
+        // 運動の停止
+        rb.velocity = Vector3.zero;
+
+        //  重力の停止
+        rb.isKinematic = true;
+    }
+
+    void SphereStorage()
     {
         // ボールが発射される時の位置を記録
         prePosition = transform.position;
 
         // 距離測定中をTrueにセット
         isCheckingDistance = true;
-
-        // 角度矢印を非表示にする
-        //angleArrowObject.SetActive(false);
-
-        // ボタンを押せないようにする
-        //SetAngleButtonState(false);
-
-        // ガイドを非表示にする
-        //guideManager.SetGuidesState(false);
     }
 
     void CalcForceDirection()
@@ -305,75 +302,69 @@ public class SphereBooster : MonoBehaviour
             // 相手が落下判定用オブジェクトだった時の処理
             StopFlying();
         }
-    }
 
-    void CheckInput()
-    {
-        // キーが押された時の動きを定義
-
-        // Input.GetKeyUpはキーが一度押された後、それが離された時にTrueを返す
-        //if (Input.GetKeyUp(KeyCode.B) && canButtonPress)
-        //{
-        //    //isBoostPressed = true;
-        //}
-
-        if (Input.GetKeyUp(KeyCode.B) && isDragging)
+        if (other.gameObject.tag == goalTag)
         {
-            isDragging = true;
+            // 相手がゴールだった時の処理
+            isTouchingGoal = true;
+
+            // ボールの運動を強制的に停止
+            Stop_rb();
         }
-
-        // 上キーが押された時は、角度変更ボタン(上)が押された時の処理を呼ぶ
-        //if (Input.GetKeyDown(KeyCode.UpArrow))
-        //{
-        //    OnPressedAngleUpButton();
-        //}
-        //else if (Input.GetKeyUp(KeyCode.UpArrow))
-        //{
-        //    OnReleasedAngleButton();
-        //}
-
-        //// 下キーが押された時は、角度変更ボタン(下)が押された時の処理を呼ぶ
-        //if (Input.GetKeyDown(KeyCode.DownArrow))
-        //{
-        //    OnPressedAngleDownButton();
-        //}
-        //else if (Input.GetKeyUp(KeyCode.DownArrow))
-        //{
-        //    OnReleasedAngleButton();
-        //}
     }
-
-
-    //void SetAngleButtonState(bool isInteractable)
-    //{
-    //    // ボタンが押せるかどうかの状態をセットする
-    //    angleUpButton.interactable = isInteractable;
-    //    angleDownButton.interactable = isInteractable;
-    //}
 
     void CheckSphereState()
     {
-        // ゴールを実装したらコメント解除
 
-        //if (!rb.IsSleeping() || hasReachedGoal)
-        //{
-        //    return;
-        //}
-        if (!rb.IsSleeping())
+        if (!rb.IsSleeping() || hasReachedGoal)
         {
             return;
         }
-        //if (isTouchingGoal)
-        //{
-        //    // ゴールで止まった時の処理
-        //    StartCoroutine(GoalAnimation(0.8f));
-        //    hasReachedGoal = true;
-        //}
+
+        if (isTouchingGoal)
+        {
+            // ゴールで止まった時の処理
+            StartCoroutine(GoalAnimation(0.3f));
+            hasReachedGoal = true;
+        }
         else
         {
             // ゴール以外で止まった時の処理
             ReadyToBoost();
         }
+    }
+
+    IEnumerator GoalAnimation(float time)
+    {
+        // ゴール時のアニメーション処理
+        RectTransform rt = goalTextObject.GetComponent<RectTransform>();
+
+        // ゴールテキストオブジェクトの初期位置と移動先位置
+        Vector3 initTextPos = rt.localPosition;
+        Vector3 targetPos = Vector3.zero;
+
+        // 引数で渡された秒数を足した時間(現在時刻に足す)
+        float finishTime = Time.time + time;
+
+        while (true)
+        {
+            // 処理完了の時刻に達したかの確認
+            float diff = finishTime - Time.time;
+            if (diff <= 0)
+            {
+                break;
+            }
+            // Lerpを計算するために時間進行度を計算
+            float rate = 1 - Mathf.Clamp01(diff / time);
+
+            // 初期位置から移動先位置までの直線上で、割合に応じた位置をセット
+            rt.localPosition = Vector3.Lerp(initTextPos, targetPos, rate);
+
+            // 1フレーム待機
+            yield return null;
+        }
+        // 移動先位置をセット
+        rt.localPosition = targetPos;
     }
 
     void ReadyToBoost()
@@ -386,19 +377,6 @@ public class SphereBooster : MonoBehaviour
 
         // 現在の距離をリセット
         SetDistanceText(0f);
-
-        // 角度矢印を表示する
-        //angleArrowObject.SetActive(true);
-
-        // ボタンを押せるようにする
-        //SetAngleButtonState(true);
-
-        // ガイドを表示する
-        //guideManager.SetGuidesState(true);
-
-        // ボールの運動状態を確認
-        //canButtonPress = true;
-        //boostButton.interactable = canButtonPress;
 
         isDragging = true;
         isDraggChecking = true;

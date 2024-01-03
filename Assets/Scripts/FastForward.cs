@@ -1,35 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class FastForward : MonoBehaviour
+public class Pause : MonoBehaviour
 {
-    [SerializeField]
-    float scale = 2.0f;
-
-    // Start is called before the first frame update
-    void Start()
+    public void PauseGame()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        ChecTimeScale();
-    }
-
-    void ChecTimeScale()
-    {
-        float newTimeScale = 1.0f;
-
-        // ボールが飛んでいる間Unity世界の時間を早くする
-        if (!SphereBooster.instance.isDraggChecking)
+        //押した時1か0かで切り替える
+        if (Time.timeScale == 1)
         {
-            newTimeScale = scale;
+            Time.timeScale = 0;
         }
-
-        // Unity世界の時間にスケールを適用
-        Time.timeScale = newTimeScale;
+        else
+        {
+            Time.timeScale = 1;
+        }
     }
 }
