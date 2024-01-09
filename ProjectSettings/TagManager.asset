@@ -8,6 +8,8 @@ TagManager:
   - Music
   - Background
   - NoMask
+  - FallChecker
+  - Ground
   layers:
   - Default
   - TransparentFX

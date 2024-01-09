@@ -23,6 +23,9 @@ public class SphereBooster : MonoBehaviour
     [SerializeField]
     GameObject goalTextObject;
 
+    // パーティクルオブジェクトへの参照   
+    public GameObject particleObject;
+
     // 発射方向
     [SerializeField]
     LineRenderer line = null;
@@ -52,6 +55,9 @@ public class SphereBooster : MonoBehaviour
 
     // 発射ボタンオブジェクトへの参照
     Button boostButton;
+
+    // パーティクルへの参照
+    ParticleSystem particle;
 
     // 飛行中フラグ
     public bool isFlying = true;
@@ -114,6 +120,9 @@ public class SphereBooster : MonoBehaviour
     // ゴールのタグ
     string goalTag = "Finish";
 
+    // 地面のタグ
+    string Ground = "Ground";
+
     // UIテキストのプレフィックス
     string distancePrefix = "飛距離: ";
 
@@ -150,6 +159,8 @@ public class SphereBooster : MonoBehaviour
         mainCameraPos = mainCamera.transform;
         currentPosition = rb.position;
         DeltaTime = Time.fixedDeltaTime;
+
+        particle=particleObject.GetComponent<ParticleSystem>();
 
         // boostボタンのコンポーネントへの参照を追加
         boostButton = boostButtonObject.GetComponent<Button>();
@@ -296,6 +307,7 @@ public class SphereBooster : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
+
         // 衝突した相手のタグを確認する
         if (other.gameObject.tag == fallCheckerTag)
         {
@@ -310,6 +322,14 @@ public class SphereBooster : MonoBehaviour
 
             // ボールの運動を強制的に停止
             Stop_rb();
+        }
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == Ground)
+        {
+            Instantiate(particle, this.transform.position, Quaternion.identity);
         }
     }
 
