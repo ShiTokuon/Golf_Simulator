@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.harumak.unityscreennavigator": {
+      "version": "https://github.com/Haruma-K/UnityScreenNavigator.git?path=/Assets/UnityScreenNavigator",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "470c1d9d2a387661cd2ea89445650a3f764bee71"
+    },
     "com.unity.2d.pixel-perfect": {
       "version": "5.0.3",
       "depth": 0,
