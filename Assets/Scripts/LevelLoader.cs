@@ -40,21 +40,21 @@ public class LevelLoader : MonoBehaviour
         loadingtext = loadingcanvas.transform.GetChild(1).GetComponent<Text>();
     }
 
-    // ほかのシーンロードしたい時
-    public void LoadScene(int index)
+    // ほかのシーンロートしたい時この関数を使う(シーンのインデックス)
+    public void LoadScene(string sceneName)
     {
-        StartCoroutine(LoadLevel(index));
+        StartCoroutine(LoadLevel(sceneName));
     }
 
-    // シーンリロードしたい時
-    public void ReloadScene()
+    // シーンリロートしたい時この関数を使う
+    public void ReloadScene(string sceneName)
     {
         var acrtivesceneindex = SceneManager.GetActiveScene().buildIndex;
-        StartCoroutine(LoadLevel(acrtivesceneindex));
+        StartCoroutine(LoadLevel(sceneName));
     }
 
     // 内部用ロードコルーチン
-    private IEnumerator LoadLevel(int scenemane)
+    private IEnumerator LoadLevel(string sceneName)
     {
         // 遅延
         yield return new WaitForSeconds(DelayActiveTime);
@@ -63,13 +63,13 @@ public class LevelLoader : MonoBehaviour
         // 待ち
         yield return new WaitForSeconds(transitionTime);
         // ロード開始
-        StartCoroutine(LoadAsync(scenemane));
+        StartCoroutine(LoadAsync(sceneName));
     }
 
     // 非同期ロード処理
-    private IEnumerator LoadAsync(int s_index)
+    private IEnumerator LoadAsync(string sceneName)
     {
-        LoadOperation = SceneManager.LoadSceneAsync(s_index);
+        LoadOperation = SceneManager.LoadSceneAsync(sceneName);
         LoadOperation.allowSceneActivation = TransitionAuto_LoadFinish;
         // ロード画面表示
         loadingcanvas.enabled = true;
@@ -79,6 +79,7 @@ public class LevelLoader : MonoBehaviour
             InLoading();
             yield return null;
         }
+
     }
 
     // ロード画面内処理
@@ -97,9 +98,13 @@ public class LevelLoader : MonoBehaviour
         if (!LoadOperation.allowSceneActivation)
         {
             /*
-            ロード完成から実際にシーン遷移までの処理
+            ロード完成から実際にシーン遷移までの処理ここで書く
+            (ここはロード完成後スペースキー押したら遷移の処理にします)
             */
-            LoadOperation.allowSceneActivation = true;
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                LoadOperation.allowSceneActivation = true;
+            }
         }
     }
 
