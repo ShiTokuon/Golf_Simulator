@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7decf71d60cb2fe438b4d9a0a160a517, type: 3}
+  m_Name: SceneLoaderManager
+  m_EditorClassIdentifier: 
+  loadingScreenMode: 0
+  sceneList:
+  - SceneName: LoadExample
+    SceneAsset: {fileID: 102900000, guid: 511f544c1ae32b3448425de6b65acff2, type: 3}
+    DisplayName: Scene Example Name
+    Description: Prompta noluisse verterem sed eu, mundi graece eum in. Vis ut alia
+      euismod tincidunt, per no ubique euismod. Indoctum qualisque vituperata an
+      his. Timeam feugait id mel, vis in iuvaret fabulas. Quis veri diceret vix in,
+      numquam praesent elaboraret eum ne.
+    SkipType: 0
+    LoadingType: 1
+    FakeLoadingTime: 7
+    Backgrounds:
+    - {fileID: 21300000, guid: 2650407d6311724489f3256696e75bb0, type: 3}
+    - {fileID: 21300000, guid: af238b260179c884b93aa3248768f90b, type: 3}
+    - {fileID: 21300000, guid: d693da8ebc165674b9509bab6391e358, type: 3}
+  - SceneName: Example 11
+    SceneAsset: {fileID: 102900000, guid: c994af733cc3682459a0e9ca8b30fc3c, type: 3}
+    DisplayName: Scene Example Name1
+    Description: Prompta noluisse verterem sed eu, mundi graece eum in. Vis ut alia
+      euismod tincidunt, per no ubique euismod. Indoctum qualisque vituperata an
+      his. Timeam feugait id mel, vis in iuvaret fabulas. Quis veri diceret vix in,
+      numquam praesent elaboraret eum ne.
+    SkipType: 0
+    LoadingType: 1
+    FakeLoadingTime: 7
+    Backgrounds:
+    - {fileID: 21300000, guid: 2650407d6311724489f3256696e75bb0, type: 3}
+    - {fileID: 21300000, guid: af238b260179c884b93aa3248768f90b, type: 3}
+    - {fileID: 21300000, guid: d693da8ebc165674b9509bab6391e358, type: 3}
+  - SceneName: Title
+    SceneAsset: {fileID: 102900000, guid: 64f47e80103dff543a8c2788b6a5d849, type: 3}
+    DisplayName: Title
+    Description: 
+    SkipType: 3
+    LoadingType: 0
+    FakeLoadingTime: 2
+    Backgrounds: []
+  - SceneName: StageSlect
+    SceneAsset: {fileID: 102900000, guid: 4fd82c4733ae01d4e8a8e2cffbb4620d, type: 3}
+    DisplayName: StageSlect
+    Description: 
+    SkipType: 3
+    LoadingType: 0
+    FakeLoadingTime: 2
+    Backgrounds: []
+  - SceneName: Stage1
+    SceneAsset: {fileID: 102900000, guid: 9fc0d4010bbf28b4594072e72b8655ab, type: 3}
+    DisplayName: Stage1
+    Description: 
+    SkipType: 3
+    LoadingType: 0
+    FakeLoadingTime: 2
+    Backgrounds: []
+  - SceneName: Stage2
+    SceneAsset: {fileID: 102900000, guid: 1d6ee26f109ed5f459bbe337092ba727, type: 3}
+    DisplayName: Stage2
+    Description: 
+    SkipType: 3
+    LoadingType: 0
+    FakeLoadingTime: 2
+    Backgrounds: []
+  - SceneName: Stage3
+    SceneAsset: {fileID: 102900000, guid: 2088dfe6dfdc55a47a316b947dc7174d, type: 3}
+    DisplayName: Stage3
+    Description: 
+    SkipType: 3
+    LoadingType: 0
+    FakeLoadingTime: 2
+    Backgrounds: []
+  - SceneName: Stage4
+    SceneAsset: {fileID: 102900000, guid: 3fe63cabc52c8d44ba55304b8753afd9, type: 3}
+    DisplayName: Stage4
+    Description: 
+    SkipType: 3
+    LoadingType: 0
+    FakeLoadingTime: 2
+    Backgrounds: []
+  - SceneName: Stage5
+    SceneAsset: {fileID: 102900000, guid: 9942c6c200aa889458a811e88b652ce3, type: 3}
+    DisplayName: Stage5
+    Description: 
+    SkipType: 3
+    LoadingType: 0
+    FakeLoadingTime: 2
+    Backgrounds: []
+  - SceneName: StageEX
+    SceneAsset: {fileID: 102900000, guid: 131175c819834a347a555451e82a012f, type: 3}
+    DisplayName: StageEX
+    Description: 
+    SkipType: 3
+    LoadingType: 0
+    FakeLoadingTime: 2
+    Backgrounds: []
+  tipsList:
+  - Create beautiful loading screens for improved your game
+  - Easy to use and implement
+  - 'Remember that have 3 diferent styles for select. '
+  - Create as many tips as you need
+  - Improved the look of your game with awasome backgrounds.
+  - Good backgrounds sounds increase the motivation of players.
+  buildSettingsAsFallback: 1
+  useSynchronousAsFallback: 1
