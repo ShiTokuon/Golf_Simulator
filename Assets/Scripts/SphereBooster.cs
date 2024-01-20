@@ -15,10 +15,6 @@ public class SphereBooster : MonoBehaviour
     [SerializeField]
     GameObject highScoreTextObject;
 
-    // 発射ボタンオブジェクトへの参照
-    [SerializeField]
-    GameObject boostButtonObject;
-
     // ゴール用UIテキストオブジェクトへの参照
     [SerializeField]
     GameObject goalTextObject;
@@ -160,10 +156,7 @@ public class SphereBooster : MonoBehaviour
         currentPosition = rb.position;
         DeltaTime = Time.fixedDeltaTime;
 
-        particle=particleObject.GetComponent<ParticleSystem>();
-
-        // boostボタンのコンポーネントへの参照を追加
-        boostButton = boostButtonObject.GetComponent<Button>();
+        particle = particleObject.GetComponent<ParticleSystem>();
 
         // DistanceTextとHighScoreTextの初期値をセット
         SetDistanceText(0f);

@@ -2,19 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class FastForward : MonoBehaviour
+public class Pause : MonoBehaviour
 {
-    public void PauseGame()
+    public GameObject OnPanel;
+    private bool IsOnPause = false;
+
+    void Start()
     {
-        //âüÇµÇΩéû1Ç©0Ç©Ç≈êÿÇËë÷Ç¶ÇÈ
-        if (Time.timeScale == 1)
+
+    }
+
+    public void OnClick()
+    {
+        pauseGame();
+    }
+
+    public void Update()
+    {
+        if (Input.GetMouseButtonDown(1))
         {
-            Time.timeScale = 0;
+            pauseGame();
+        }
+    }
+    public void pauseGame()
+    {
+        if (IsOnPause)
+        {
+            Time.timeScale = 1;
+            IsOnPause = false;
+            OnPanel.SetActive(false);
         }
         else
         {
-            Time.timeScale = 1;
+            Time.timeScale = 0;
+            IsOnPause = true;
+            OnPanel.SetActive(true);          
         }
     }
 }

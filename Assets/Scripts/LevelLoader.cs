@@ -26,7 +26,6 @@ public class LevelLoader : MonoBehaviour
     private Text loadingtext;
     // 非同期ロード用
     private AsyncOperation LoadOperation;
-
     void Awake()
     {
         transform.GetChild(0).gameObject.SetActive(true);
@@ -92,7 +91,7 @@ public class LevelLoader : MonoBehaviour
         // プログレスバーと文字を更新する
         float progress = Mathf.Clamp01(LoadOperation.progress / .9f);
         loadingbar.value = progress;
-        loadingtext.text = progress * 100f + " %";
+        loadingtext.text = progress* 100f + " %";
 
 
         if (!LoadOperation.allowSceneActivation)
@@ -107,5 +106,4 @@ public class LevelLoader : MonoBehaviour
             }
         }
     }
-
 }
