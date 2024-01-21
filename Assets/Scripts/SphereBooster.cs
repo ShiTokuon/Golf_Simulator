@@ -56,28 +56,25 @@ public class SphereBooster : MonoBehaviour
     ParticleSystem particle;
 
     // 飛行中フラグ
-    public bool isFlying = true;
+    private bool isFlying = true;
 
     // 距離測定中フラグ
-    public bool isCheckingDistance = false;
-
-    // ボタンを押せる状態かどうかのフラグ
-    //bool canButtonPress = true;
+    private bool isCheckingDistance = false;
 
     // ドラッグ開始フラグ
-    public bool isDragStart = false;
+    private bool isDragStart = false;
 
     // ドラッグフラグ
-    bool isDragging = false;
+    private bool isDragging = false;
 
     // ドラッグ開始できる状態かどうかのフラグ
-    public bool isDraggChecking = true;
+    private bool isDraggChecking = true;
 
     // ゴール接触フラグ
-    bool isTouchingGoal = false;
+    private bool isTouchingGoal = false;
 
     // ゴール済みフラグ
-    bool hasReachedGoal = false;
+    private bool hasReachedGoal = false;
 
     // ボールのオブジェクト停止位置格納用ベクトル
     Vector3 stopPosition = Vector3.zero;
