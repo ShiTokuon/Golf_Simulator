@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class LevelLoader : MonoBehaviour
 {
+    private const bool V = false;
+
     // シーン遷移のアニメーション
     [Header("シーン遷移アニメーション")]
     public Animator transition;
@@ -26,8 +28,10 @@ public class LevelLoader : MonoBehaviour
     private Text loadingtext;
     // 非同期ロード用
     private AsyncOperation LoadOperation;
+
     void Awake()
     {
+        Pause._isExec = false;
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -55,6 +59,8 @@ public class LevelLoader : MonoBehaviour
     // 内部用ロードコルーチン
     private IEnumerator LoadLevel(string sceneName)
     {
+        // ポーズ画面をオフにする
+        Pause._isExec = true;
         // 遅延
         yield return new WaitForSeconds(DelayActiveTime);
         // フェードアウトスタート
@@ -92,7 +98,6 @@ public class LevelLoader : MonoBehaviour
         float progress = Mathf.Clamp01(LoadOperation.progress / .9f);
         loadingbar.value = progress;
         loadingtext.text = progress* 100f + " %";
-
 
         if (!LoadOperation.allowSceneActivation)
         {

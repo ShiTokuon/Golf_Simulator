@@ -490,8 +490,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseEffects:
   - {fileID: 2104120676}
-  HideObjects:
-  - {fileID: 1153413643}
+  HideObjects: []
 --- !u!1 &297554919
 GameObject:
   m_ObjectHideFlags: 0

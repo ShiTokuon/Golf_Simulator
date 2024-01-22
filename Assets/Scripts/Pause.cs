@@ -13,6 +13,8 @@ public class Pause : MonoBehaviour
     //[Header("ポーズ画面から抜ける効果音")] public AudioClip pauseOffSE;
     //SoundManager soundManager;
     //public GameContoroller gameContoroller;//ステージクリア後かどうか判定するためにgamecontorollerを登録。ゲーム内容によっては不要。
+    public static bool _isExec { private get; set; } = false;
+
 
     private void Start() {
         //GameObject gameObject = GameObject.FindGameObjectWithTag("SoundManager");
@@ -27,14 +29,15 @@ public class Pause : MonoBehaviour
     //マウス、キーボード、コントローラー等のボタンを押した場合
     public void Update() {
         //////////////////※最重要※ポーズ画面になる条件///////////////////
-       if (Input.GetKeyDown(KeyCode.Escape)/* &&!gameContoroller.isEnd*/) {         
+       if (Input.GetKeyDown(KeyCode.Escape)/* &&!gameContoroller.isEnd*/|| _isExec) {
+            _isExec = false;
             pauseTheGame();
         }
     }
 
     public void pauseTheGame(){
-        if (IsOnPause) { 
-            //Time.timeScale = 1;
+        if (IsOnPause) {
+            Time.timeScale = 1;
             IsOnPause = false;
             //soundManager.PlaySe(pauseOffSE);
             for (int i = 0; i < pauseEffects.Length; i++) {
@@ -45,7 +48,7 @@ public class Pause : MonoBehaviour
             }
         } else {
             //soundManager.PlaySe(pauseOnSE);
-            //Time.timeScale = 0;
+            Time.timeScale = 0;
             IsOnPause = true;
             for (int i = 0; i < pauseEffects.Length; i++) {
                 pauseEffects[i].SetActive(true);
