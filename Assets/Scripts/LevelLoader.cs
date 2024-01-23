@@ -28,16 +28,17 @@ public class LevelLoader : MonoBehaviour
     private Text loadingtext;
     // 非同期ロード用
     private AsyncOperation LoadOperation;
+    private Pause pause;
 
     void Awake()
     {
-        Pause._isExec = false;
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        this.pause = FindObjectOfType<Pause>();
         loadingcanvas = transform.GetChild(1).gameObject.GetComponent<Canvas>();
         loadingbar = loadingcanvas.transform.GetChild(0).GetComponent<Slider>();
         loadingtext = loadingcanvas.transform.GetChild(1).GetComponent<Text>();
@@ -46,7 +47,9 @@ public class LevelLoader : MonoBehaviour
     // ほかのシーンロートしたい時この関数を使う(シーンのインデックス)
     public void LoadScene(string sceneName)
     {
+        Scene currentScene = SceneManager.GetActiveScene();
         StartCoroutine(LoadLevel(sceneName));
+        pause._isExec = true;
     }
 
     // シーンリロートしたい時この関数を使う
@@ -54,13 +57,12 @@ public class LevelLoader : MonoBehaviour
     {
         var acrtivesceneindex = SceneManager.GetActiveScene().buildIndex;
         StartCoroutine(LoadLevel(sceneName));
+        pause._isExec = true;
     }
 
     // 内部用ロードコルーチン
     private IEnumerator LoadLevel(string sceneName)
     {
-        // ポーズ画面をオフにする
-        Pause._isExec = true;
         // 遅延
         yield return new WaitForSeconds(DelayActiveTime);
         // フェードアウトスタート
@@ -73,18 +75,17 @@ public class LevelLoader : MonoBehaviour
 
     // 非同期ロード処理
     private IEnumerator LoadAsync(string sceneName)
-    {
+    {     
         LoadOperation = SceneManager.LoadSceneAsync(sceneName);
         LoadOperation.allowSceneActivation = TransitionAuto_LoadFinish;
         // ロード画面表示
         loadingcanvas.enabled = true;
-
+        
         while (!LoadOperation.isDone)
         {
             InLoading();
             yield return null;
         }
-
     }
 
     // ロード画面内処理
@@ -97,7 +98,7 @@ public class LevelLoader : MonoBehaviour
         // プログレスバーと文字を更新する
         float progress = Mathf.Clamp01(LoadOperation.progress / .9f);
         loadingbar.value = progress;
-        loadingtext.text = progress* 100f + " %";
+        loadingtext.text = progress * 100f + " %";
 
         if (!LoadOperation.allowSceneActivation)
         {

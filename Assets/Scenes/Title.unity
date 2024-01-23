@@ -794,6 +794,11 @@ PrefabInstance:
       propertyPath: transitionTime
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7802255813039882424, guid: 60c65a1bbe2483746990242b27f4308e,
+        type: 3}
+      propertyPath: TransitionAuto_LoadFinish
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7935398820911949540, guid: 60c65a1bbe2483746990242b27f4308e,
         type: 3}
       propertyPath: m_Name
