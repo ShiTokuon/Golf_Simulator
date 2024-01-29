@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.62851954, g: 0.49515063, b: 0.75572747, a: 1}
+  m_IndirectSpecularColor: {r: 0.6285767, g: 0.49537796, b: 0.75594246, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2004,7 +2004,7 @@ PrefabInstance:
     - target: {fileID: 542128246310845915, guid: 3c6257c46259d4445bb279eae383178f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: StageSlect
+      value: Stage1
       objectReference: {fileID: 0}
     - target: {fileID: 542128246310845915, guid: 3c6257c46259d4445bb279eae383178f,
         type: 3}

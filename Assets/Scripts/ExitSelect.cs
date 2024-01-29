@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
-public class GameEndSelect : MonoBehaviour
+public class ExitSelect : MonoBehaviour
 {
     [Header("ゲーム終了パネル")]
     public GameObject ExitPanel;
@@ -30,7 +31,12 @@ public class GameEndSelect : MonoBehaviour
 
     public void onYesClick()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
+        // はいが押されたときゲームを閉じる
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     public void onNoClick()
